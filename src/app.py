@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uuid
 import streamlit as st
-import pandas as pd
+import utils
+
+import inference.generator as ig
 
 st.set_page_config(
     page_title="Data Generator",
@@ -53,10 +54,21 @@ def render_action_buttons() -> tuple[bool, bool]:
 
     return submit, download
 
-def render_data_box(submit:bool):
+def get_formatted_schema():
+    try:
+        return ig.format_user_input(st.session_state.table_data)
+    except ValueError as e:
+        st.error(e)
+
+def render_data_box(submit:bool, num_records:int):
     with st.container():
         if submit:
-            st.code('The submitted button has been pressed')
+            try:
+                formatted_schema = get_formatted_schema()
+            except ValueError as e:
+                st.error(e)
+
+            st.code(ig.generate_data_sample(num_records, formatted_schema))
 
 def render_field_list():
 
@@ -116,8 +128,9 @@ def render_field_list():
                             st.session_state.table_data.pop(i)
                             st.rerun()
 
-def on_download(download):
-    pass
+def on_download(download:bool, num_records:int, formatted_schema:str):
+    if download:
+        utils.write_string_to_downloads(ig.generate_data_sample(num_records, formatted_schema))
 
 def main():
     render_header()
@@ -130,9 +143,9 @@ def main():
 
     submit, download = render_action_buttons()
 
-    render_data_box(submit)
+    render_data_box(submit, num_records)
 
-    on_download(download)
+    on_download(download, num_records, get_formatted_schema())
 
 
 if __name__ == "__main__":
