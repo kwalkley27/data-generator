@@ -23,10 +23,14 @@ st.set_page_config(
 )
 
 def render_header():
+    '''Manages the streamlit app title and description'''
+
     st.title("Data Generator")
     st.markdown("An app that allows users to generate sample data by defining fields with natural language.")
 
 def render_num_record_input() -> int:
+    '''Manages the input box designating the number of records to generate'''
+
     with st.container():
         col1, col2, col3 = st.columns([2, 2, 1])
 
@@ -36,12 +40,16 @@ def render_num_record_input() -> int:
     return num_records
 
 def render_clear_data_button():
+    '''Manages the button used to clear all field definitions in the table'''
+
     # Clear all data button
     if st.button("Clear All Data", type="secondary"):
         st.session_state.table_data = [{'col1': '', 'col2': ''}]
         st.rerun()
 
 def render_action_buttons() -> tuple[bool, bool]:
+    '''Manages the Submit and Download buttons used to initiate app actions'''
+
     with st.container():
 
         col1, col2, col3 = st.columns([2, 2, 1])
@@ -55,12 +63,16 @@ def render_action_buttons() -> tuple[bool, bool]:
     return submit, download
 
 def get_formatted_schema():
+    '''Returns a formatted schema based on the streamlit field and value definitions'''
+
     try:
         return ig.format_user_input(st.session_state.table_data)
     except ValueError as e:
         st.error(e)
 
 def render_data_box(submit:bool, num_records:int):
+    '''Calls the data sample generator and prints it to a streamlit container'''
+
     with st.container():
         if submit:
             try:
@@ -71,6 +83,7 @@ def render_data_box(submit:bool, num_records:int):
             st.code(ig.generate_data_sample(num_records, formatted_schema))
 
 def render_field_list():
+    '''Manages the dynamic creation of the field list'''
 
     # Initialize session state for table data
     if 'table_data' not in st.session_state:
@@ -129,6 +142,9 @@ def render_field_list():
                             st.rerun()
 
 def on_download(download:bool, num_records:int, formatted_schema:str):
+    '''Manages the Download button action to write the generated data sample
+    to the local Downloads directory'''
+
     if download:
         utils.write_string_to_downloads(ig.generate_data_sample(num_records, formatted_schema))
 

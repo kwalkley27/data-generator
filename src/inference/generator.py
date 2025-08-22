@@ -16,7 +16,9 @@ import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 
-def format_user_input(input:list[dict]):
+def format_user_input(input:list[dict]) -> str:
+    '''Takes the streamlit generated list of fields and value descriptions and formats
+    it into a dictionary string for easy processing'''
     schema = dict()
 
     for field in input:
@@ -28,7 +30,8 @@ def format_user_input(input:list[dict]):
     return str(schema)
 
 def generate_data_sample(num_records:str, input_user_schema:str):
-    
+    '''Submits a formatted prompt and returns the structured model output containing
+    the sample data'''
     GOOGLE_API_KEY = os.getenv("GEMINI_API_KEY")
 
     llm = ChatGoogleGenerativeAI(
@@ -37,20 +40,6 @@ def generate_data_sample(num_records:str, input_user_schema:str):
         google_api_key=GOOGLE_API_KEY,
         response_format={"type": "json_object"}
     )
-
-#    num_records = 5
-#
-#    input_user_schema = '''
-#            {
-#                'src': ip,
-#                'dst': ip,
-#                'src_port': int between 1-65535,
-#                'dst_port': int between 1-65535,
-#                'protocol': enum either FOO or BAR,
-#                'bytes': int
-#            }
-#
-#        '''
     
     response = llm.invoke(f'''Generate {str(num_records)} example records with the following format.
                             
