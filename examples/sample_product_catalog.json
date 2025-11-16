@@ -1,0 +1,32 @@
+[
+  {
+    "product_name": "UltraBook Pro 15",
+    "price": 449.99,
+    "category": "Laptops",
+    "in_stock": true
+  },
+  {
+    "product_name": "Quantum Wireless Mouse",
+    "price": 29.99,
+    "category": "Accessories",
+    "in_stock": true
+  },
+  {
+    "product_name": "StudioSound Headphones",
+    "price": 159.99,
+    "category": "Audio",
+    "in_stock": false
+  },
+  {
+    "product_name": "4K Vision Monitor",
+    "price": 389.99,
+    "category": "Monitors",
+    "in_stock": true
+  },
+  {
+    "product_name": "MechKey Pro Keyboard",
+    "price": 89.99,
+    "category": "Accessories",
+    "in_stock": true
+  }
+]
